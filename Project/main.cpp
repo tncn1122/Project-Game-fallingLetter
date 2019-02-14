@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Windows.h>
+#include <conio.h>
 #include <ctime>
 #include "gConsole.h"
 using namespace std;
@@ -16,30 +17,37 @@ int main()
 		// tao man hinh game
 		gameABC.createScr();
 		
-		
-		if (gameABC.drop)
-			gameABC.createChr();
-			// khoi tao ki tu ngau nhien
-		else 
+		for (int i = 1; i <= gameABC.level; i++)
 		{
-			Sleep(50);
-			gameABC.fallingChr();
-			// lam roi ki tu do xuong
+			if (!gameABC.waiting[i])
+			{
+				gameABC.createLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
+				gameABC.waiting[i] = true;
+			}
+			else
+			{
+				gameABC.fallingLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
+				if (gameABC.posX[i] == hGame)
+				{
+					gameABC.waiting[i] = false;
+				}
+			}
 		}
-		
+		Sleep(75);
 		// in man hinh game
 		gameABC.drawScr();
+		
+		gameABC.getKey();
+		
+		
 		
 		
 		gameABC.gotoXY(50, 7);
 			gameABC.showScore();
-		// in diem
 		gameABC.gotoXY(50, 9);
-		// in mang
 			gameABC.showLife();
-			
-		// bat ki tu nhap tu ban phim
-		gameABC.getKey();
+		gameABC.gotoXY(50, 11);	
+			gameABC.showLevel();
 		
 		// xoa man hinh
 		//gameABC.clearScr();

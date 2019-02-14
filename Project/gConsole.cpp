@@ -76,38 +76,24 @@ void game::drawScr()
 	}
 }
 
-// ve chu
-void game::createChr()
+// sinh chu
+void game::createLetter(int &posX, int &posY, char &key)
 {
 	posY = 1 + rand() % 25; // random  1 -> 26
 	posX = 2;
 	key = posY - 1 + 65;
 	Map[posX][posY] = key;
-	drop = false;
-	press = false;
 }
 
 // lam chu roi
-void game::fallingChr()
+void game::fallingLetter(int &posX, int &posY, char &key)
 {
 	if (posX < hGame && !press)
 	{
 		Map[posX][posY] = ' ';
 		posX++;
-		if (posX == hGame)
-		{
-			Map[posX][posY] = '*';
-			drop = true;
-			press = false;
-			life[error--] = ' ';
-			score--;
-		}
-		else
-			Map[posX][posY] = key;
+		Map[posX][posY] = key;
 	}
-		
-	if (error < 0)
-		lose = true;
 }
 
 void game::getKey()
@@ -115,20 +101,18 @@ void game::getKey()
 	if (kbhit())
 	{
 		char pressKey = getch();
-		if (pressKey == tolower(key))
+		for (int i = 1; i <= level; i++)
 		{
-			press = true;
-			drop = true;
-			score++;
-		}
-		else
-		{
-			life[error--] = ' ';
-			score--;
+			if (pressKey == tolower(key[i]))
+			{
+				waiting[i] = false;
+				key[i] = ' ';
+				score++;
+				if (score%10 == 0)	
+					level++;
+			}
 		}
 	}
-		if (error < 0)
-		lose = true;
 }
 
 void game::showScore()
@@ -139,4 +123,9 @@ void game::showScore()
 void game::showLife()
 {
 	cout << "Your lifes: " << life;
+}
+
+void game::showLevel()
+{
+	cout << "Your Levels: " << level;
 }
