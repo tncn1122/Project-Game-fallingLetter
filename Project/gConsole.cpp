@@ -77,12 +77,13 @@ void game::drawScr()
 }
 
 // sinh chu
-void game::createLetter(int &posX, int &posY, char &key)
+void game::createLetter(int &posX, int &posY, char &key, int &delay)
 {
 	posY = 1 + rand() % 25; // random  1 -> 26
 	posX = 2;
 	key = posY - 1 + 65;
 	Map[posX][posY] = key;
+	delay = delayMin + rand() % delayMax;
 }
 
 // lam chu roi
@@ -96,11 +97,17 @@ void game::fallingLetter(int &posX, int &posY, char &key)
 	}
 }
 
+void game::showLetter(int posX, int posY, char key)
+{
+	Map[posX][posY] = key;
+}
+
 void game::getKey()
 {
 	if (kbhit())
 	{
 		char pressKey = getch();
+		bool fail = false;
 		for (int i = 1; i <= level; i++)
 		{
 			if (pressKey == tolower(key[i]))
@@ -109,11 +116,38 @@ void game::getKey()
 				key[i] = ' ';
 				score++;
 				if (score%10 == 0)	
-					level++;
+					levelUp = true;
+				fail = false;
+				break;
 			}
+			else
+				fail = true;
 		}
+		if (fail)
+			hit();
 	}
 }
+
+void game::hit()
+{
+	if (error >= 0)
+	{
+		life[error] = ' ';
+		error--;
+	}
+	else
+		lose = true;	
+}
+void game::updateLevel()
+{
+	level++;
+	levelUp = false;
+	if (delayMin >= 0)
+		delayMin--;
+	if (delayMin&1 || delayMin == 0 && delayMax > 0)
+		delayMax--;
+}
+
 
 void game::showScore()
 {

@@ -21,26 +21,35 @@ int main()
 		{
 			if (!gameABC.waiting[i])
 			{
-				gameABC.createLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
+				gameABC.createLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i], gameABC.delayNum[i]);
 				gameABC.waiting[i] = true;
 			}
 			else
 			{
-				gameABC.fallingLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
-				if (gameABC.posX[i] == hGame)
+				gameABC.num[i]++;
+				if (gameABC.num[i] >= gameABC.delayNum[i])
 				{
-					gameABC.waiting[i] = false;
+					gameABC.num[i] = 0;
+					gameABC.fallingLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
+					if (gameABC.posX[i] == hGame)
+					{
+						gameABC.waiting[i] = false;
+						gameABC.hit();
+					}
 				}
+				else
+					gameABC.showLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
 			}
 		}
-		Sleep(75);
+		//Sleep(75);
 		// in man hinh game
 		gameABC.drawScr();
 		
 		gameABC.getKey();
 		
-		
-		
+		if (gameABC.levelUp)
+			gameABC.updateLevel();
+
 		
 		gameABC.gotoXY(50, 7);
 			gameABC.showScore();
@@ -55,8 +64,15 @@ int main()
 		{
 			system("cls");
 			
-			cout << "\n\n\n\n\n\t\t\t\tYOU LOSE\n\n\n\n\n\n\n\n";
-			return 0;
+			gameABC.gotoXY(30, 7);
+				cout << "YOU LOSE!";
+			gameABC.gotoXY(28, 8);
+				gameABC.showScore(); 
+			gameABC.gotoXY(26, 10);	
+				cout << "Thanks for playing!\n\n";
+			gameABC.gotoXY(1, 30);
+			system("pause");
+			break;
 			// ket thuc
 		}
 	}
