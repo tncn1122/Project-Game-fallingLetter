@@ -10,15 +10,25 @@ game gameABC;
 int main()
 {
 	gameABC.resizeConsole(800, 600);
+	gameABC.gotoXY(5, 5);
+	gameABC.createScr();
+	gameABC.gotoXY(50, 7);
+	gameABC.showScore();
+	gameABC.gotoXY(50, 9);
+	gameABC.showLife();
+	gameABC.gotoXY(50, 11);	
+	gameABC.showLevel();
 	srand(time(0));
+	
 	while (true)
 	{
-		gameABC.gotoXY(5, 5);
+		
 		// tao man hinh game
-		gameABC.createScr();
+		//gameABC.drawScr(10, 6);
 		
 		for (int i = 1; i <= gameABC.level; i++)
 		{
+			//bien waiting dung de ngan chuong trinh sinh ra ki tu cho den khi ki tu do duoc bam hoac la cham day khung
 			if (!gameABC.waiting[i])
 			{
 				gameABC.createLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i], gameABC.delayNum[i]);
@@ -31,35 +41,39 @@ int main()
 				{
 					gameABC.num[i] = 0;
 					gameABC.fallingLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
-					if (gameABC.posX[i] == hGame)
+					if (gameABC.posX[i] >= hGame+5)
 					{
 						gameABC.waiting[i] = false;
+						gameABC.showLetter(gameABC.posX[i], gameABC.posY[i], '*');
 						gameABC.hit();
 					}
 				}
-				else
-					gameABC.showLetter(gameABC.posX[i], gameABC.posY[i], gameABC.key[i]);
 			}
 		}
-		//Sleep(75);
-		// in man hinh game
-		gameABC.drawScr();
 		
+		
+		Sleep(20);
+
+		// kiem tra ki tu nhap vao
 		gameABC.getKey();
 		
+		//score tang 10 diem thi tang 1 level
 		if (gameABC.levelUp)
 			gameABC.updateLevel();
-
 		
-		gameABC.gotoXY(50, 7);
+		//neu diem thay doi thi cap nhat tai man hinh
+		if (gameABC.changeScore)
+		{
+			gameABC.gotoXY(50, 7);
 			gameABC.showScore();
-		gameABC.gotoXY(50, 9);
+			gameABC.gotoXY(50, 9);
 			gameABC.showLife();
-		gameABC.gotoXY(50, 11);	
+			gameABC.gotoXY(50, 11);	
 			gameABC.showLevel();
+			gameABC.changeScore = false;
+		}
 		
-		// xoa man hinh
-		//gameABC.clearScr();
+		//sai qua 3 lan
 		if (gameABC.lose)
 		{
 			system("cls");
